@@ -59,6 +59,12 @@ bool Pong::init()
 	renderer->setWindowTitle("Pong");
 	renderer->setClearColour(ASGE::COLOURS::BLACK);
 	renderer->setSpriteMode(ASGE::SpriteSortMode::IMMEDIATE);
+
+	paddle_one = renderer->createRawSprite();
+	paddle_one->loadTexture(".\\Resources\\Textures\\Paddle.png");
+	paddle_one->width(30);
+	paddle_one->height(200);
+
 	toggleFPS();
 
 	callback_id = inputs->addCallbackFnc(
@@ -89,7 +95,8 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 	if(in_menu)
 	{
 		if (key->key == ASGE::KEYS::KEY_ENTER &&
-			key->action == ASGE::KEYS::KEY_RELEASED)
+			key->action == ASGE::KEYS::KEY_RELEASED &&
+			in_main_menu == true)
 		{
 			switch (menu_option)
 			{
@@ -111,6 +118,13 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 				signalExit();
 				break;
 			}
+		}
+		else if ((key->key == ASGE::KEYS::KEY_ENTER &&
+			key->action == ASGE::KEYS::KEY_RELEASED &&
+			in_mode_select == true))
+		{
+			in_mode_select = false;
+			in_menu = false;
 		}
 
 		if (key->key == ASGE::KEYS::KEY_W &&
@@ -139,6 +153,42 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 			&& menu_option != 2)
 		{
 			menu_option++;
+		}
+
+		if (key->key == ASGE::KEYS::KEY_ESCAPE &&
+			key->action == ASGE::KEYS::KEY_RELEASED &&
+			in_main_menu == false)
+		{
+			in_main_menu = true;
+			in_leaderboard = false;
+			in_mode_select = false;
+		}
+	}
+	else
+	{
+		if (key->key == ASGE::KEYS::KEY_W &&
+			key->action == ASGE::KEYS::KEY_RELEASED)
+			
+		{
+			
+		}
+
+		if (key->key == ASGE::KEYS::KEY_S &&
+			key->action == ASGE::KEYS::KEY_RELEASED)
+		{
+			
+		}
+
+		if (key->key == ASGE::KEYS::KEY_UP &&
+			key->action == ASGE::KEYS::KEY_RELEASED)
+		{
+	
+		}
+
+		if (key->key == ASGE::KEYS::KEY_DOWN &&
+			key->action == ASGE::KEYS::KEY_RELEASED)
+		{
+			
 		}
 	}
 
@@ -183,11 +233,20 @@ void Pong::render(const ASGE::GameTime &)
 	}
 	else if (in_mode_select)
 	{
-		renderer->renderText(menu_option == 0 ? ">PLAY" : "PLAY",
+		renderer->renderText("FIRST TO: " ,
 			200, 200, 1.0, ASGE::COLOURS::AQUAMARINE);
-		renderer->renderText(menu_option == 1 ? ">LEADERBOARDS" : "LEADERBOARDS",
-			200, 250, 1.0, ASGE::COLOURS::AQUAMARINE);
-		renderer->renderText(menu_option == 2 ? ">QUIT" : "QUIT?",
-			200, 300, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+		renderer->renderText(menu_option == 0 ? ">5 POINTS" : "5 POINTS",
+			350, 200, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+		renderer->renderText(menu_option == 1 ? ">10 POINTS" : "10 POINTS",
+			350, 300, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+		renderer->renderText(menu_option == 2 ? ">20 POINTS" : "20 POINTS",
+			350, 400, 1.0, ASGE::COLOURS::AQUAMARINE);
+	}
+	else
+	{
+		renderer->renderSprite(*paddle_one);
 	}
 }

@@ -99,6 +99,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\Game.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="\\nstu-nas01.uwe.ac.uk\users1$\b7-king\Personal\ESD\Paddle.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

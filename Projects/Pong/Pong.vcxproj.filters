@@ -18,6 +18,12 @@
     <Filter Include="Source">
       <UniqueIdentifier>{150ff3c8-9b98-46c7-9e2b-ccd67ca720c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{7d5d6852-b2bb-4445-9514-248c5f4d1656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Textures">
+      <UniqueIdentifier>{b2834a65-c73b-4a24-8a31-ebf2609932f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Game.h">
@@ -29,5 +35,10 @@
     <ClInclude Include="..\..\Source\GameFont.h">
       <Filter>Headers</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="\\nstu-nas01.uwe.ac.uk\users1$\b7-king\Personal\ESD\Paddle.png">
+      <Filter>Resources\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
