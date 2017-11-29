@@ -61,6 +61,10 @@ bool Pong::init()
 	renderer->setSpriteMode(ASGE::SpriteSortMode::IMMEDIATE);
 	toggleFPS();
 
+	callback_id = inputs->addCallbackFnc(
+		ASGE::E_KEY, &Pong::keyHandler, this);
+
+
 	// enable noob mode
 	inputs->use_threads = false;
 	
@@ -80,6 +84,63 @@ bool Pong::init()
 */
 void Pong::keyHandler(ASGE::SharedEventData data)
 {
+	auto key = static_cast<const ASGE::KeyEvent*>(data.get());
+	
+	if(in_menu)
+	{
+		if (key->key == ASGE::KEYS::KEY_ENTER &&
+			key->action == ASGE::KEYS::KEY_RELEASED)
+		{
+			switch (menu_option)
+			{
+			case 0:
+				in_main_menu = false;
+				in_mode_select = true;
+				in_leaderboard = false;
+				menu_option = 0;
+				break;
+
+			case 1:
+				in_main_menu = false;
+				in_mode_select = false;
+				in_leaderboard = true;
+				menu_option = 0;
+				break;
+
+			case 2:
+				signalExit();
+				break;
+			}
+		}
+
+		if (key->key == ASGE::KEYS::KEY_W &&
+			key->action == ASGE::KEYS::KEY_RELEASED
+			&& menu_option != 0)
+		{
+			menu_option--;
+		}
+
+		if (key->key == ASGE::KEYS::KEY_S &&
+			key->action == ASGE::KEYS::KEY_RELEASED
+			&& menu_option != 2)
+		{
+			menu_option++;
+		}
+
+		if (key->key == ASGE::KEYS::KEY_UP &&
+			key->action == ASGE::KEYS::KEY_RELEASED
+			&& menu_option != 0)
+		{
+			menu_option--;
+		}
+
+		if (key->key == ASGE::KEYS::KEY_DOWN &&
+			key->action == ASGE::KEYS::KEY_RELEASED
+			&& menu_option != 2)
+		{
+			menu_option++;
+		}
+	}
 
 }
 
@@ -106,5 +167,27 @@ void Pong::update(const ASGE::GameTime &)
 */
 void Pong::render(const ASGE::GameTime &)
 {
-	
+	if (in_main_menu)
+	{
+		renderer->renderText(menu_option == 0 ? ">PLAY" : "PLAY",
+			200, 200, 1.0, ASGE::COLOURS::AQUAMARINE);
+		renderer->renderText(menu_option == 1 ? ">LEADERBOARDS" : "LEADERBOARDS",
+			200, 250, 1.0, ASGE::COLOURS::AQUAMARINE);
+		renderer->renderText(menu_option == 2 ? ">QUIT" : "QUIT?",
+			200, 300, 1.0, ASGE::COLOURS::AQUAMARINE);
+	}
+	else if (in_leaderboard)
+	{
+		renderer->renderText("TOP SCORES", 
+			200, 200, 1.0, ASGE::COLOURS::AQUAMARINE);
+	}
+	else if (in_mode_select)
+	{
+		renderer->renderText(menu_option == 0 ? ">PLAY" : "PLAY",
+			200, 200, 1.0, ASGE::COLOURS::AQUAMARINE);
+		renderer->renderText(menu_option == 1 ? ">LEADERBOARDS" : "LEADERBOARDS",
+			200, 250, 1.0, ASGE::COLOURS::AQUAMARINE);
+		renderer->renderText(menu_option == 2 ? ">QUIT" : "QUIT?",
+			200, 300, 1.0, ASGE::COLOURS::AQUAMARINE);
+	}
 }

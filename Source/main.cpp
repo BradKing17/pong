@@ -3,7 +3,11 @@
 #include <Engine/Platform.h>
 #include "Game.h"
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
+int WINAPI WinMain(
+	HINSTANCE hInstance, 
+	HINSTANCE hPrevInstance, 
+	PSTR pScmdline, 
+	int iCmdshow)
 {
 	Pong game;
 	if (game.init())

@@ -26,5 +26,13 @@ private:
 	int  callback_id = -1;             /**< Input Callback ID. The callback ID assigned by the game engine. */
 	bool exit = false;                 /**< Exit boolean. If true the game loop will exit. */
 	ASGE::Sprite* sprite = nullptr;    /**< Sprite Object. The background sprite. */
+
+	bool in_menu = true;
+	bool in_main_menu = true;
+	bool in_leaderboard = false;
+	bool in_mode_select = false;
+	int menu_option = 0;
+	int score_p_one = 0;
+	int score_p_two = 0;
 };
 
