@@ -3,6 +3,7 @@
 #include <Engine/InputEvents.h>
 #include <Engine/Sprite.h>
 
+
 #include "Constants.h"
 #include "Game.h"
 #include "GameFont.h"
@@ -62,8 +63,24 @@ bool Pong::init()
 
 	paddle_one = renderer->createRawSprite();
 	paddle_one->loadTexture(".\\Resources\\Textures\\Paddle.png");
-	paddle_one->width(30);
-	paddle_one->height(200);
+	paddle_one->width(15);
+	paddle_one->height(75);
+	paddle_one->xPos(10);
+	paddle_one->yPos((game_height / 2) - (paddle_one->height()/2));
+
+	paddle_two = renderer->createRawSprite();
+	paddle_two->loadTexture(".\\Resources\\Textures\\Paddle.png");
+	paddle_two->width(15);
+	paddle_two->height(75);
+	paddle_two->xPos(game_width - (paddle_two->width() + 10));
+	paddle_two->yPos((game_height / 2) - (paddle_one->height() / 2));
+
+	ball = renderer->createRawSprite();
+	ball->loadTexture(".\\Resources\\Textures\\Paddle.png");
+	ball->width(15);
+	ball->height(15);
+	ball->xPos(game_width / 2 - ball->width() / 2);
+	ball->yPos(game_height / 2 - ball->height() / 2);
 
 	toggleFPS();
 
@@ -166,29 +183,30 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 	}
 	else
 	{
-		if (key->key == ASGE::KEYS::KEY_W &&
-			key->action == ASGE::KEYS::KEY_RELEASED)
-			
+		if (key->key == ASGE::KEYS::KEY_W)
 		{
-			
+			direction_one = -1;
+		}
+		else if (key->key == ASGE::KEYS::KEY_S)
+		{	
+			direction_one = 1;
+		}
+		else if (key->action == ASGE::KEYS::KEY_RELEASED)
+		{
+			direction_two = 0;
 		}
 
-		if (key->key == ASGE::KEYS::KEY_S &&
-			key->action == ASGE::KEYS::KEY_RELEASED)
+		if (key->key == ASGE::KEYS::KEY_UP)
 		{
-			
+			direction_two = -1;
 		}
-
-		if (key->key == ASGE::KEYS::KEY_UP &&
-			key->action == ASGE::KEYS::KEY_RELEASED)
+		else if (key->key == ASGE::KEYS::KEY_DOWN)
 		{
-	
+			direction_two = 1;
 		}
-
-		if (key->key == ASGE::KEYS::KEY_DOWN &&
-			key->action == ASGE::KEYS::KEY_RELEASED)
+		else if (key->action == ASGE::KEYS::KEY_RELEASED)
 		{
-			
+			direction_one = 0;
 		}
 	}
 
@@ -202,8 +220,35 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 			 the buffers are swapped accordingly and the image shown.
 *   @return  void
 */
-void Pong::update(const ASGE::GameTime &)
+void Pong::update(const ASGE::GameTime & us)
 {
+	auto y_pos_one = paddle_one->yPos();
+	auto y_pos_two = paddle_two->yPos();
+
+	if (y_pos_one <= 0)
+	{
+		direction_one = 1;
+	}
+	else if (y_pos_one >= (game_height - paddle_one->height()))
+	{
+		direction_one = -1;
+	}
+	
+	if (y_pos_two <= 0)
+	{
+		direction_two = 1;
+	}
+	else if (y_pos_two >= (game_height - paddle_two->height()))
+	{
+		direction_two = -1;
+	}
+
+
+	y_pos_one += direction_one * 150 * (us.delta_time.count() / 1000.f);
+	y_pos_two += direction_two * 150 * (us.delta_time.count() / 1000.f);
+
+	paddle_one->yPos(y_pos_one);
+	paddle_two->yPos(y_pos_two);
 
 }
 
@@ -248,5 +293,7 @@ void Pong::render(const ASGE::GameTime &)
 	else
 	{
 		renderer->renderSprite(*paddle_one);
+		renderer->renderSprite(*paddle_two);
+		renderer->renderSprite(*ball);
 	}
 }

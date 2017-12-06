@@ -28,6 +28,7 @@ private:
 	ASGE::Sprite* sprite = nullptr; /**< Sprite Object. The background sprite. */
 	ASGE::Sprite* paddle_one = nullptr;
 	ASGE::Sprite* paddle_two = nullptr;
+	ASGE::Sprite* ball = nullptr;
 
 
 	bool in_menu = true;
@@ -37,5 +38,10 @@ private:
 	int menu_option = 0;
 	int score_p_one = 0;
 	int score_p_two = 0;
+
+	int direction_one = 0;
+	int direction_two = 0;
+	bool player_one_input = false;
+	bool player_two_input = false;
 };
 
