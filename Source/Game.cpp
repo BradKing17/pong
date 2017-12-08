@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "Game.h"
 #include "GameFont.h"
+#include <ctime>
 
 
 /**
@@ -79,14 +80,12 @@ bool Pong::init()
 	ball->loadTexture(".\\Resources\\Textures\\Paddle.png");
 	ball->width(15);
 	ball->height(15);
-	ball->xPos(game_width / 2 - ball->width() / 2);
-	ball->yPos(game_height / 2 - ball->height() / 2);
 
-	std::srand(time(NULL));
 
-	ball_direction.x = (rand() % 10) - 5;
 
-	ball_direction.y = (rand() % 10) - 5;
+	spawn();
+
+
 
 
 	toggleFPS();
@@ -190,24 +189,49 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 	}
 	else
 	{
-		if (key->key == ASGE::KEYS::KEY_W)
+		if (key->action == ASGE::KEYS::KEY_PRESSED)
 		{
-			direction_one = -1;
-		}
-		else if (key->key == ASGE::KEYS::KEY_S)
-		{	
-			direction_one = 1;
-		}
-	    
+			switch (key->key)
+			{
+			case ASGE::KEYS::KEY_W:
+				direction_one = -1;
+				break;
 
-		if (key->key == ASGE::KEYS::KEY_UP)
-		{
-			direction_two = -1;
+			case ASGE::KEYS::KEY_S:
+				direction_one = 1;
+				break;
+
+			case ASGE::KEYS::KEY_UP:
+				direction_two = -1;
+				break;
+
+			case ASGE::KEYS::KEY_DOWN:
+				direction_two = 1;
+				break;
+			}
 		}
-		else if (key->key == ASGE::KEYS::KEY_DOWN)
+		else if (key->action == ASGE::KEYS::KEY_RELEASED)
 		{
-			direction_two = 1;
+			switch (key->key)
+			{
+			case ASGE::KEYS::KEY_W:
+				direction_one = 0;
+				break;
+
+			case ASGE::KEYS::KEY_S:
+				direction_one = 0;
+				break;
+
+			case ASGE::KEYS::KEY_UP:
+				direction_two = 0;
+				break;
+
+			case ASGE::KEYS::KEY_DOWN:
+				direction_two = 0;
+				break;
+			}
 		}
+
 	}
 
 }
@@ -229,47 +253,37 @@ void Pong::update(const ASGE::GameTime & us)
 		auto y_pos = ball->yPos();
 
 
-		if (y_pos >= game_height - ball->height() || y_pos <= 0)
-		{
-			ball_direction.y *= -1;
-			
-		}
-
-		x_pos += move_speed * ball_direction.x * (us.delta_time.count() / 1000.f);
-		y_pos += move_speed * ball_direction.y * (us.delta_time.count() / 1000.f);
-
-
+		ball_direction.normalise();
+		x_pos += move_speed * ball_direction.get_x() * (us.delta_time.count() / 1000.f);
+		y_pos += move_speed * ball_direction.get_y() * (us.delta_time.count() / 1000.f);
 		// update the position of the ball
 		ball->yPos(y_pos);
 		ball->xPos(x_pos);
 
 
+		if (y_pos >= game_height - ball->height() || y_pos <= 0)
+		{
+			ball_direction.set_y(ball_direction.get_y() * -1);
+		}
+
+		if (x_pos >= game_width - ball->width())
+		{
+			score_p_one++;
+			spawn();
+		}
+		if (x_pos <= 0)
+		{
+			score_p_two++;
+			spawn();
+		}
 
 
 		auto y_pos_one = paddle_one->yPos();
 		auto y_pos_two = paddle_two->yPos();
 
-		if (y_pos_one <= 0)
-		{
-			direction_one = 1;
-		}
-		else if (y_pos_one >= (game_height - paddle_one->height()))
-		{
-			direction_one = -1;
-		}
 
-		if (y_pos_two <= 0)
-		{
-			direction_two = 1;
-		}
-		else if (y_pos_two >= (game_height - paddle_two->height()))
-		{
-			direction_two = -1;
-		}
-
-
-		y_pos_one += direction_one * 150 * (us.delta_time.count() / 1000.f);
-		y_pos_two += direction_two * 150 * (us.delta_time.count() / 1000.f);
+		y_pos_one += direction_one * move_speed * (us.delta_time.count() / 1000.f);
+		y_pos_two += direction_two * move_speed * (us.delta_time.count() / 1000.f);
 
 		paddle_one->yPos(y_pos_one);
 		paddle_two->yPos(y_pos_two);
@@ -319,5 +333,22 @@ void Pong::render(const ASGE::GameTime &)
 		renderer->renderSprite(*paddle_one);
 		renderer->renderSprite(*paddle_two);
 		renderer->renderSprite(*ball);
+
+		std::string score_str_one = "SCORE: " + std::to_string(score_p_one);
+		renderer->renderText(score_str_one.c_str(), 150, 25, 1.0, ASGE::COLOURS::DARKORANGE);
+		std::string score_str_two = "SCORE: " + std::to_string(score_p_two);
+		renderer->renderText(score_str_two.c_str(), (game_width - 150), 25, 1.0, ASGE::COLOURS::DARKORANGE);
+
+
 	}
+}
+
+void Pong::spawn()
+{
+	std::srand(time(NULL));
+	ball_direction.set_x((rand() % 10) - 10);
+	ball_direction.set_y((rand() % 10) - 10);
+
+	ball->xPos((game_width - ball->width()) / 2);
+	ball->yPos((game_height  - ball->height()) / 2);
 }

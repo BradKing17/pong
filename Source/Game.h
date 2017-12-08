@@ -24,6 +24,8 @@ private:
 	virtual void update(const ASGE::GameTime &) override;
 	virtual void render(const ASGE::GameTime &) override;
 
+	void spawn();
+
 	int  callback_id = -1;             /**< Input Callback ID. The callback ID assigned by the game engine. */
 	bool exit = false;                 /**< Exit boolean. If true the game loop will exit. */
 	ASGE::Sprite* sprite = nullptr; /**< Sprite Object. The background sprite. */
@@ -45,7 +47,7 @@ private:
 	bool player_one_input = false;
 	bool player_two_input = false;
 
-	Vector ball_direction;
-	int move_speed;
+	Vector ball_direction = { 2,3 };
+	int move_speed = 10;
 };
 
