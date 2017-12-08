@@ -95,6 +95,7 @@
     <ClInclude Include="..\..\Source\Constants.h" />
     <ClInclude Include="..\..\Source\Game.h" />
     <ClInclude Include="..\..\Source\GameFont.h" />
+    <ClInclude Include="..\..\Source\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Game.cpp" />

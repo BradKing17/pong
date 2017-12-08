@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <Engine/OGLGame.h>
+#include "Vector.h"
 
 struct GameFont;
 
@@ -43,5 +44,8 @@ private:
 	int direction_two = 0;
 	bool player_one_input = false;
 	bool player_two_input = false;
+
+	Vector ball_direction;
+	int move_speed;
 };
 

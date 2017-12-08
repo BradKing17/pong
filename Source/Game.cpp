@@ -82,6 +82,13 @@ bool Pong::init()
 	ball->xPos(game_width / 2 - ball->width() / 2);
 	ball->yPos(game_height / 2 - ball->height() / 2);
 
+	std::srand(time(NULL));
+
+	ball_direction.x = (rand() % 10) - 5;
+
+	ball_direction.y = (rand() % 10) - 5;
+
+
 	toggleFPS();
 
 	callback_id = inputs->addCallbackFnc(
@@ -191,10 +198,7 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 		{	
 			direction_one = 1;
 		}
-		else if (key->action == ASGE::KEYS::KEY_RELEASED)
-		{
-			direction_two = 0;
-		}
+	    
 
 		if (key->key == ASGE::KEYS::KEY_UP)
 		{
@@ -203,10 +207,6 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 		else if (key->key == ASGE::KEYS::KEY_DOWN)
 		{
 			direction_two = 1;
-		}
-		else if (key->action == ASGE::KEYS::KEY_RELEASED)
-		{
-			direction_one = 0;
 		}
 	}
 
@@ -222,34 +222,58 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 */
 void Pong::update(const ASGE::GameTime & us)
 {
-	auto y_pos_one = paddle_one->yPos();
-	auto y_pos_two = paddle_two->yPos();
-
-	if (y_pos_one <= 0)
+	if (!in_menu)
 	{
-		direction_one = 1;
-	}
-	else if (y_pos_one >= (game_height - paddle_one->height()))
-	{
-		direction_one = -1;
-	}
-	
-	if (y_pos_two <= 0)
-	{
-		direction_two = 1;
-	}
-	else if (y_pos_two >= (game_height - paddle_two->height()))
-	{
-		direction_two = -1;
-	}
+
+		auto x_pos = ball->xPos();
+		auto y_pos = ball->yPos();
 
 
-	y_pos_one += direction_one * 150 * (us.delta_time.count() / 1000.f);
-	y_pos_two += direction_two * 150 * (us.delta_time.count() / 1000.f);
+		if (y_pos >= game_height - ball->height() || y_pos <= 0)
+		{
+			ball_direction.y *= -1;
+			
+		}
 
-	paddle_one->yPos(y_pos_one);
-	paddle_two->yPos(y_pos_two);
+		x_pos += move_speed * ball_direction.x * (us.delta_time.count() / 1000.f);
+		y_pos += move_speed * ball_direction.y * (us.delta_time.count() / 1000.f);
 
+
+		// update the position of the ball
+		ball->yPos(y_pos);
+		ball->xPos(x_pos);
+
+
+
+
+		auto y_pos_one = paddle_one->yPos();
+		auto y_pos_two = paddle_two->yPos();
+
+		if (y_pos_one <= 0)
+		{
+			direction_one = 1;
+		}
+		else if (y_pos_one >= (game_height - paddle_one->height()))
+		{
+			direction_one = -1;
+		}
+
+		if (y_pos_two <= 0)
+		{
+			direction_two = 1;
+		}
+		else if (y_pos_two >= (game_height - paddle_two->height()))
+		{
+			direction_two = -1;
+		}
+
+
+		y_pos_one += direction_one * 150 * (us.delta_time.count() / 1000.f);
+		y_pos_two += direction_two * 150 * (us.delta_time.count() / 1000.f);
+
+		paddle_one->yPos(y_pos_one);
+		paddle_two->yPos(y_pos_two);
+	}
 }
 
 

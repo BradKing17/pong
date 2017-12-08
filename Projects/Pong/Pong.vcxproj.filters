@@ -35,6 +35,9 @@
     <ClInclude Include="..\..\Source\GameFont.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Vector.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="\\nstu-nas01.uwe.ac.uk\users1$\b7-king\Personal\ESD\Paddle.png">
