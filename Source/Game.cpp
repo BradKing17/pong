@@ -111,8 +111,10 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 {
 	auto key = static_cast<const ASGE::KeyEvent*>(data.get());
 	
+	//Menu Functionality
 	if(in_menu)
 	{
+
 		if (key->key == ASGE::KEYS::KEY_ENTER &&
 			key->action == ASGE::KEYS::KEY_RELEASED &&
 			in_main_menu == true)
@@ -142,6 +144,7 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 				}
 			}
 		}
+		//score menu navigation
 		else if ((key->key == ASGE::KEYS::KEY_ENTER &&
 			key->action == ASGE::KEYS::KEY_RELEASED &&
 			in_mode_select == true))
@@ -204,6 +207,7 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 	}
 	else
 	{
+		//paddle movement
 		if (key->key == ASGE::KEYS::KEY_ESCAPE)
 		{
 			signalExit();
