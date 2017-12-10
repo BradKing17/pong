@@ -27,6 +27,7 @@ private:
 	virtual void render(const ASGE::GameTime &) override;
 
 	void spawn();
+	int Pong::isInside(const ASGE::Sprite* paddle_sprite, const ASGE::Sprite* ball_sprite) const;
 
 	int  callback_id = -1;             /**< Input Callback ID. The callback ID assigned by the game engine. */
 	bool exit = false;                 /**< Exit boolean. If true the game loop will exit. */

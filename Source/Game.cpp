@@ -189,42 +189,53 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 		{
 			switch (key->key)
 			{
-			case ASGE::KEYS::KEY_W:
-				direction.set_dir_one(-1);
-				break;
-
-			case ASGE::KEYS::KEY_S:
-				direction.set_dir_one(1);
-				break;
-
-			case ASGE::KEYS::KEY_UP:
-				direction.set_dir_two(-1);
-				break;
-
-			case ASGE::KEYS::KEY_DOWN:
-				direction.set_dir_two(1);
-				break;
+				case ASGE::KEYS::KEY_W:
+				{
+					direction.set_dir_one(-1);
+					break;
+				}
+				case ASGE::KEYS::KEY_S:
+				{
+					direction.set_dir_one(1);
+					break;
+				}
+				case ASGE::KEYS::KEY_UP:
+				{
+					direction.set_dir_two(-1);
+					break;
+				}
+				case ASGE::KEYS::KEY_DOWN:
+				{
+					direction.set_dir_two(1);
+					break;
+				}
 			}
 		}
 		else if (key->action == ASGE::KEYS::KEY_RELEASED)
 		{
 			switch (key->key)
 			{
-			case ASGE::KEYS::KEY_W:
-				direction.set_dir_one(0);
-				break;
+				case ASGE::KEYS::KEY_W:
+				{
+					direction.set_dir_one(0);
+					break;
+				}
+				case ASGE::KEYS::KEY_S:
+				{
+					direction.set_dir_one(0);
+					break;
+				}
 
-			case ASGE::KEYS::KEY_S:
-				direction.set_dir_one(0);
-				break;
-
-			case ASGE::KEYS::KEY_UP:
-				direction.set_dir_two(0);
-				break;
-
-			case ASGE::KEYS::KEY_DOWN:
-				direction.set_dir_two(0);
-				break;
+				case ASGE::KEYS::KEY_UP:
+				{
+					direction.set_dir_two(0);
+					break;
+				}
+				case ASGE::KEYS::KEY_DOWN:
+				{
+					direction.set_dir_two(0);
+					break;
+				}
 			}
 		}
 
@@ -244,6 +255,15 @@ void Pong::update(const ASGE::GameTime & us)
 {
 	if (!in_menu)
 	{
+
+		if (isInside(paddle_one, ball))
+		{
+			ball_direction.set_x(ball_direction.get_x() * -1);
+		}
+		if (isInside(paddle_two, ball))
+		{
+			ball_direction.set_x(ball_direction.get_x() * -1);
+		}
 
 		auto x_pos = ball->xPos();
 		auto y_pos = ball->yPos();
@@ -349,4 +369,26 @@ void Pong::spawn()
 
 //
 	
+}
+
+int Pong::isInside(const ASGE::Sprite* paddle_sprite, const ASGE::Sprite* ball_sprite) const
+{
+	auto paddle_min_x = paddle_sprite->xPos();
+	auto paddle_max_x = paddle_sprite->xPos() + paddle_sprite->width();
+	auto paddle_min_y = paddle_sprite->yPos();
+	auto paddle_max_y = paddle_sprite->yPos() + paddle_sprite->height();
+
+	auto ball_min_x = ball_sprite->xPos();
+	auto ball_max_x = ball_sprite->xPos() + ball_sprite->width();
+	auto ball_min_y = ball_sprite->yPos();
+	auto ball_max_y = ball_sprite->yPos() + ball_sprite->height();
+
+	if (paddle_min_x >= ball_min_x || ball_max_x <= paddle_max_x)	
+	{
+		return 1;
+	}
+	else if (paddle_min_y <= ball_min_y || ball_max_y <= paddle_max_y)
+	{
+		return 2;
+	}
 }
