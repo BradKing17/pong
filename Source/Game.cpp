@@ -204,6 +204,10 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 	}
 	else
 	{
+		if (key->key == ASGE::KEYS::KEY_ESCAPE)
+		{
+			signalExit();
+		}
 		if (key->action == ASGE::KEYS::KEY_PRESSED)
 		{
 			switch (key->key)
@@ -257,7 +261,6 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 				}
 			}
 		}
-
 	}
 
 }
@@ -371,7 +374,8 @@ void Pong::render(const ASGE::GameTime &)
 
 
 		renderer->renderText("SCORE POINTS BY HITTING THE BALL PAST THE\n"
-			"OTHER PLAYERS PADDLE INTO THEIR GOAL WHILE DEFENDING YOUR OWN GOAL.",
+			"OTHER PLAYERS PADDLE INTO THEIR GOAL WHILE DEFENDING YOUR OWN GOAL.\n\n"
+			"PRESS ESCAPE WHEN IN GAME TO EXIT.",
 			200, 400, 1.0, ASGE::COLOURS::AQUAMARINE);
 	}
 	else if (in_mode_select)
