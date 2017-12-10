@@ -16,9 +16,6 @@
     <ClCompile Include="..\..\Source\Movement.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Collision.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -45,9 +42,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Vector.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Collision.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Movement.h">

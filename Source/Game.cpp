@@ -119,29 +119,49 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 		{
 			switch (menu_option)
 			{
-			case 0:
-				in_main_menu = false;
-				in_mode_select = true;
-				in_how_to_play = false;
-				menu_option = 0;
-				break;
-
-			case 1:
-				in_main_menu = false;
-				in_mode_select = false;
-				in_how_to_play = true;
-				menu_option = 0;
-				break;
-
-			case 2:
-				signalExit();
-				break;
+				case 0:
+				{
+					in_main_menu = false;
+					in_mode_select = true;
+					in_how_to_play = false;
+					menu_option = 0;
+					break;
+				}
+				case 1:
+				{
+					in_main_menu = false;
+					in_mode_select = false;
+					in_how_to_play = true;
+					menu_option = 0;
+					break;
+				}
+				case 2:
+				{
+					signalExit();
+					break;
+				}
 			}
 		}
 		else if ((key->key == ASGE::KEYS::KEY_ENTER &&
 			key->action == ASGE::KEYS::KEY_RELEASED &&
 			in_mode_select == true))
 		{
+			switch (menu_option)
+			{
+			case 0:
+				max_score = 5;
+				break;
+
+			case 1:
+				max_score = 10;
+				break;
+
+			case 2:
+				max_score = 20;
+				break;
+			}
+
+
 			in_mode_select = false;
 			in_menu = false;
 		}
@@ -376,6 +396,8 @@ void Pong::render(const ASGE::GameTime &)
 
 		std::string score_str_one = "SCORE: " + std::to_string(score_p_one);
 		renderer->renderText(score_str_one.c_str(), 150, 25, 1.0, ASGE::COLOURS::DARKORANGE);
+		std::string max_scr_str = "FIRST TO: " + std::to_string(max_score);
+		renderer->renderText(max_scr_str.c_str(), ((game_width / 2) - 50), 25, 1.0, ASGE::COLOURS::DARKORANGE);
 		std::string score_str_two = "SCORE: " + std::to_string(score_p_two);
 		renderer->renderText(score_str_two.c_str(), (game_width - 250), 25, 1.0, ASGE::COLOURS::DARKORANGE);
 
