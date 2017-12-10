@@ -256,17 +256,18 @@ void Pong::update(const ASGE::GameTime & us)
 	if (!in_menu)
 	{
 
-		if (isInside(paddle_one, ball))
+		auto x_pos = ball->xPos();
+		auto y_pos = ball->yPos();
+
+		if (isInside(ball, paddle_one, x_pos, y_pos))
 		{
 			ball_direction.set_x(ball_direction.get_x() * -1);
 		}
-		if (isInside(paddle_two, ball))
+		if (isInside(ball, paddle_two, x_pos, y_pos))
 		{
 			ball_direction.set_x(ball_direction.get_x() * -1);
 		}
 
-		auto x_pos = ball->xPos();
-		auto y_pos = ball->yPos();
 		x_pos += ball_speed * ball_direction.get_x() * (us.delta_time.count() / 1000.f);
 		y_pos += ball_speed * ball_direction.get_y() * (us.delta_time.count() / 1000.f);
 
@@ -360,9 +361,20 @@ void Pong::render(const ASGE::GameTime &)
 
 void Pong::spawn()
 {
+	auto x = (rand() % 10 + 1) - 5;
+	auto y = (rand() % 10 + 1) - 5;
 
-	ball_direction.set_x((rand() % 10) - 5);
-	ball_direction.set_y((rand() % 10) - 5);
+	if (x == 0)
+	{
+		x = (rand() % 10 + 1) - 5;
+	}
+	if (y == 0)
+	{
+		y = (rand() % 10 + 1) - 5;
+	}
+
+	ball_direction.set_x(x);
+	ball_direction.set_y(y);
 	ball_direction.normalise();
 	ball->xPos((game_width - ball->width()) / 2);
 	ball->yPos((game_height  - ball->height()) / 2);
@@ -371,24 +383,21 @@ void Pong::spawn()
 	
 }
 
-int Pong::isInside(const ASGE::Sprite* paddle_sprite, const ASGE::Sprite* ball_sprite) const
+bool Pong::isInside(const ASGE::Sprite* ball_sprite, const ASGE::Sprite* paddle_sprite, float x, float y) const
 {
-	auto paddle_min_x = paddle_sprite->xPos();
-	auto paddle_max_x = paddle_sprite->xPos() + paddle_sprite->width();
-	auto paddle_min_y = paddle_sprite->yPos();
-	auto paddle_max_y = paddle_sprite->yPos() + paddle_sprite->height();
+	float paddle_height = paddle_sprite->height();
+	float paddle_width = paddle_sprite->width();
+	float pos_x = paddle_sprite->xPos();
+	float pos_y = paddle_sprite->yPos();
 
-	auto ball_min_x = ball_sprite->xPos();
-	auto ball_max_x = ball_sprite->xPos() + ball_sprite->width();
-	auto ball_min_y = ball_sprite->yPos();
-	auto ball_max_y = ball_sprite->yPos() + ball_sprite->height();
+	if (((x >= pos_x) && (x <= pos_x + paddle_width)) &&
+		((y >= pos_y) && (y <= pos_y + paddle_height)))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 
-	if (paddle_min_x >= ball_min_x || ball_max_x <= paddle_max_x)	
-	{
-		return 1;
-	}
-	else if (paddle_min_y <= ball_min_y || ball_max_y <= paddle_max_y)
-	{
-		return 2;
-	}
 }
