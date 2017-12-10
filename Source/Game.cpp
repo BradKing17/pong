@@ -122,14 +122,14 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 			case 0:
 				in_main_menu = false;
 				in_mode_select = true;
-				in_leaderboard = false;
+				in_how_to_play = false;
 				menu_option = 0;
 				break;
 
 			case 1:
 				in_main_menu = false;
 				in_mode_select = false;
-				in_leaderboard = true;
+				in_how_to_play = true;
 				menu_option = 0;
 				break;
 
@@ -179,7 +179,6 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 			in_main_menu == false)
 		{
 			in_main_menu = true;
-			in_leaderboard = false;
 			in_mode_select = false;
 		}
 	}
@@ -255,19 +254,20 @@ void Pong::update(const ASGE::GameTime & us)
 {
 	if (!in_menu)
 	{
-
+		//get current position of ball
 		auto x_pos = ball->xPos();
 		auto y_pos = ball->yPos();
 
+		//check if ball is hitting paddles 
 		if (isInside(ball, paddle_one, x_pos, y_pos))
 		{
 			ball_direction.set_x(ball_direction.get_x() * -1);
 		}
-		if (isInside(ball, paddle_two, x_pos, y_pos))
+		else if (isInside(ball, paddle_two, x_pos, y_pos))
 		{
 			ball_direction.set_x(ball_direction.get_x() * -1);
 		}
-
+		//apply speed to ball 
 		x_pos += ball_speed * ball_direction.get_x() * (us.delta_time.count() / 1000.f);
 		y_pos += ball_speed * ball_direction.get_y() * (us.delta_time.count() / 1000.f);
 
@@ -275,12 +275,13 @@ void Pong::update(const ASGE::GameTime & us)
 		ball->yPos(y_pos);
 		ball->xPos(x_pos);
 
-
+		//check for walls
 		if (y_pos >= game_height - ball->height() || y_pos <= 0)
 		{
 			ball_direction.set_y(ball_direction.get_y() * -1);
 		}
 
+		//check for point scoring
 		if (x_pos >= game_width - ball->width())
 		{
 			score_p_one++;
@@ -293,10 +294,9 @@ void Pong::update(const ASGE::GameTime & us)
 			
 		}
 
-
+		//paddle movement
 		auto y_pos_one = paddle_one->yPos();
 		auto y_pos_two = paddle_two->yPos();
-
 
 		y_pos_one += direction.get_dir_one() * move_speed * (us.delta_time.count() / 1000.f);
 		y_pos_two += direction.get_dir_two() * move_speed * (us.delta_time.count() / 1000.f);
@@ -320,15 +320,39 @@ void Pong::render(const ASGE::GameTime &)
 	{
 		renderer->renderText(menu_option == 0 ? ">PLAY" : "PLAY",
 			200, 200, 1.0, ASGE::COLOURS::AQUAMARINE);
-		renderer->renderText(menu_option == 1 ? ">LEADERBOARDS" : "LEADERBOARDS",
+		renderer->renderText(menu_option == 1 ? ">HOW TO PLAY" : "HOW TO PLAY",
 			200, 250, 1.0, ASGE::COLOURS::AQUAMARINE);
 		renderer->renderText(menu_option == 2 ? ">QUIT" : "QUIT?",
 			200, 300, 1.0, ASGE::COLOURS::AQUAMARINE);
 	}
-	else if (in_leaderboard)
+	else if (in_how_to_play)
 	{
-		renderer->renderText("TOP SCORES", 
-			200, 200, 1.0, ASGE::COLOURS::AQUAMARINE);
+		renderer->renderText("HOW TO PLAY", 
+			200, 200, 1.0, ASGE::COLOURS::ORANGE);
+
+		renderer->renderText("PLAYER 1",
+			200, 250, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+		renderer->renderText("W : MOVE YOUR PADDLE UP",
+			200, 300, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+		renderer->renderText("S : MOVE YOUR PADDLE DOWN",
+			200, 325, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+		renderer->renderText("PLAYER 2",
+			500, 250, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+
+		renderer->renderText("UP ARROW : MOVE YOUR PADDLE UP",
+			500, 300, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+		renderer->renderText("DOWN ARROW : MOVE YOUR PADDLE DOWN",
+			500, 325, 1.0, ASGE::COLOURS::AQUAMARINE);
+
+
+		renderer->renderText("SCORE POINTS BY HITTING THE BALL PAST THE\n"
+			"OTHER PLAYERS PADDLE INTO THEIR GOAL WHILE DEFENDING YOUR OWN GOAL.",
+			200, 400, 1.0, ASGE::COLOURS::AQUAMARINE);
 	}
 	else if (in_mode_select)
 	{
@@ -353,7 +377,7 @@ void Pong::render(const ASGE::GameTime &)
 		std::string score_str_one = "SCORE: " + std::to_string(score_p_one);
 		renderer->renderText(score_str_one.c_str(), 150, 25, 1.0, ASGE::COLOURS::DARKORANGE);
 		std::string score_str_two = "SCORE: " + std::to_string(score_p_two);
-		renderer->renderText(score_str_two.c_str(), (game_width - 150), 25, 1.0, ASGE::COLOURS::DARKORANGE);
+		renderer->renderText(score_str_two.c_str(), (game_width - 250), 25, 1.0, ASGE::COLOURS::DARKORANGE);
 
 
 	}
@@ -361,25 +385,36 @@ void Pong::render(const ASGE::GameTime &)
 
 void Pong::spawn()
 {
-	auto x = (rand() % 10 + 1) - 5;
-	auto y = (rand() % 10 + 1) - 5;
-
-	if (x == 0)
+	if (score_p_one == max_score)
 	{
-		x = (rand() % 10 + 1) - 5;
+		in_menu = true;
+		in_main_menu = true;
 	}
-	if (y == 0)
+	else if (score_p_two == max_score)
 	{
-		y = (rand() % 10 + 1) - 5;
+		in_menu = true;
+		in_main_menu = true;
 	}
+	else
+	{
+		auto x = (rand() % 10 + 1) - 5;
+		auto y = (rand() % 10 + 1) - 5;
 
-	ball_direction.set_x(x);
-	ball_direction.set_y(y);
-	ball_direction.normalise();
-	ball->xPos((game_width - ball->width()) / 2);
-	ball->yPos((game_height  - ball->height()) / 2);
+		if (x == 0)
+		{
+			x += 5;
+		}
+		if (y == 0)
+		{
+			y += 5;
+		}
 
-//
+		ball_direction.set_x(x);
+		ball_direction.set_y(y);
+		ball_direction.normalise();
+		ball->xPos((game_width - ball->width()) / 2);
+		ball->yPos((game_height - ball->height()) / 2);
+	}
 	
 }
 

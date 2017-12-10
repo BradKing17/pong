@@ -39,11 +39,12 @@ private:
 
 	bool in_menu = true;
 	bool in_main_menu = true;
-	bool in_leaderboard = false;
+	bool in_how_to_play = false;
 	bool in_mode_select = false;
 	int menu_option = 0;
 	int score_p_one = 0;
 	int score_p_two = 0;
+	int max_score = 5;
 
 	Movement direction = 0;
 	Vector ball_direction = { 2,3 };
