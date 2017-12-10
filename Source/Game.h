@@ -2,6 +2,8 @@
 #include <string>
 #include <Engine/OGLGame.h>
 #include "Vector.h"
+#include "Collision.h"
+#include "Movement.h"
 
 struct GameFont;
 
@@ -42,12 +44,9 @@ private:
 	int score_p_one = 0;
 	int score_p_two = 0;
 
-	int direction_one = 0;
-	int direction_two = 0;
-	bool player_one_input = false;
-	bool player_two_input = false;
-
+	Movement direction = 0;
 	Vector ball_direction = { 2,3 };
-	int move_speed = 10;
+	int ball_speed = 300;
+	int move_speed = 300;
 };
 

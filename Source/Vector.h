@@ -2,26 +2,21 @@
 class Vector
 {
 public:
-	Vector(int x, int y);
+	Vector(float x, float y);
 	~Vector();
 
 	void normalise();
 	void scalar(float scalar);
 
-	int get_x();
-	int get_y();
-	void set_x(int x_val);
-	void set_y(int y_val);
-
-
-
-	float x_unit_vector = 1;
-	float y_unit_vector = 1;
+	float get_x();
+	float get_y();
+	void set_x(float x_val);
+	void set_y(float y_val);
 
 
 private:
 
-	int x = 0;
-	int y = 0;
+	float x = 0;
+	float y = 0;
 
 };

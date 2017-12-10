@@ -81,12 +81,8 @@ bool Pong::init()
 	ball->width(15);
 	ball->height(15);
 
-
-
+	std::srand(time(NULL));
 	spawn();
-
-
-
 
 	toggleFPS();
 
@@ -194,19 +190,19 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 			switch (key->key)
 			{
 			case ASGE::KEYS::KEY_W:
-				direction_one = -1;
+				direction.set_dir_one(-1);
 				break;
 
 			case ASGE::KEYS::KEY_S:
-				direction_one = 1;
+				direction.set_dir_one(1);
 				break;
 
 			case ASGE::KEYS::KEY_UP:
-				direction_two = -1;
+				direction.set_dir_two(-1);
 				break;
 
 			case ASGE::KEYS::KEY_DOWN:
-				direction_two = 1;
+				direction.set_dir_two(1);
 				break;
 			}
 		}
@@ -215,19 +211,19 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 			switch (key->key)
 			{
 			case ASGE::KEYS::KEY_W:
-				direction_one = 0;
+				direction.set_dir_one(0);
 				break;
 
 			case ASGE::KEYS::KEY_S:
-				direction_one = 0;
+				direction.set_dir_one(0);
 				break;
 
 			case ASGE::KEYS::KEY_UP:
-				direction_two = 0;
+				direction.set_dir_two(0);
 				break;
 
 			case ASGE::KEYS::KEY_DOWN:
-				direction_two = 0;
+				direction.set_dir_two(0);
 				break;
 			}
 		}
@@ -251,11 +247,9 @@ void Pong::update(const ASGE::GameTime & us)
 
 		auto x_pos = ball->xPos();
 		auto y_pos = ball->yPos();
+		x_pos += ball_speed * ball_direction.get_x() * (us.delta_time.count() / 1000.f);
+		y_pos += ball_speed * ball_direction.get_y() * (us.delta_time.count() / 1000.f);
 
-
-		ball_direction.normalise();
-		x_pos += move_speed * ball_direction.get_x() * (us.delta_time.count() / 1000.f);
-		y_pos += move_speed * ball_direction.get_y() * (us.delta_time.count() / 1000.f);
 		// update the position of the ball
 		ball->yPos(y_pos);
 		ball->xPos(x_pos);
@@ -275,6 +269,7 @@ void Pong::update(const ASGE::GameTime & us)
 		{
 			score_p_two++;
 			spawn();
+			
 		}
 
 
@@ -282,8 +277,8 @@ void Pong::update(const ASGE::GameTime & us)
 		auto y_pos_two = paddle_two->yPos();
 
 
-		y_pos_one += direction_one * move_speed * (us.delta_time.count() / 1000.f);
-		y_pos_two += direction_two * move_speed * (us.delta_time.count() / 1000.f);
+		y_pos_one += direction.get_dir_one() * move_speed * (us.delta_time.count() / 1000.f);
+		y_pos_two += direction.get_dir_two() * move_speed * (us.delta_time.count() / 1000.f);
 
 		paddle_one->yPos(y_pos_one);
 		paddle_two->yPos(y_pos_two);
@@ -345,10 +340,13 @@ void Pong::render(const ASGE::GameTime &)
 
 void Pong::spawn()
 {
-	std::srand(time(NULL));
-	ball_direction.set_x((rand() % 10) - 10);
-	ball_direction.set_y((rand() % 10) - 10);
 
+	ball_direction.set_x((rand() % 10) - 5);
+	ball_direction.set_y((rand() % 10) - 5);
+	ball_direction.normalise();
 	ball->xPos((game_width - ball->width()) / 2);
 	ball->yPos((game_height  - ball->height()) / 2);
+
+//
+	
 }
