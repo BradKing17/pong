@@ -3,7 +3,7 @@
 #include <Engine/OGLGame.h>
 #include "Vector.h"
 #include "Collision.h"
-#include "Movement.h"
+#include "Paddle.h"
 
 struct GameFont;
 
@@ -27,11 +27,12 @@ private:
 	virtual void render(const ASGE::GameTime &) override;
 
 	void spawn();
-	bool Pong::isInside(const ASGE::Sprite* ball_sprite, const ASGE::Sprite* paddle_sprite, float x, float y) const;
+	bool Pong::isInside(const ASGE::Sprite* paddle_sprite, float x, float y) const;
 
 	int  callback_id = -1;             /**< Input Callback ID. The callback ID assigned by the game engine. */
 	bool exit = false;                 /**< Exit boolean. If true the game loop will exit. */
 	ASGE::Sprite* sprite = nullptr; /**< Sprite Object. The background sprite. */
+	ASGE::Sprite* background = nullptr;
 	ASGE::Sprite* paddle_one = nullptr;
 	ASGE::Sprite* paddle_two = nullptr;
 	ASGE::Sprite* ball = nullptr;
@@ -46,9 +47,9 @@ private:
 	int score_p_two = 0;
 	int max_score = 5;
 
-	Movement direction = 0;
+	Paddle direction = 0;
 	Vector ball_direction = { 2,3 };
-	int ball_speed = 300;
-	int move_speed = 300;
+	int ball_speed = 600;
+	int move_speed = 450;
 };
 

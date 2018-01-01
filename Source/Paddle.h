@@ -1,8 +1,8 @@
 #pragma once
-class Movement
+class Paddle
 {
 public:
-	Movement(int direction);
+	Paddle(int direction);
 
 	int get_dir_one();
 	int get_dir_two();

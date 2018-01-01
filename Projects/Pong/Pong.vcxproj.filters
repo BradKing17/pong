@@ -13,7 +13,7 @@
     <ClCompile Include="..\..\Source\Vector.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Movement.cpp">
+    <ClCompile Include="..\..\Source\Paddle.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,13 +44,8 @@
     <ClInclude Include="..\..\Source\Vector.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Movement.h">
+    <ClInclude Include="..\..\Source\Paddle.h">
       <Filter>Headers</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="\\nstu-nas01.uwe.ac.uk\users1$\b7-king\Personal\ESD\Paddle.png">
-      <Filter>Resources\Textures</Filter>
-    </Image>
   </ItemGroup>
 </Project>

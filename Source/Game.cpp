@@ -77,9 +77,9 @@ bool Pong::init()
 	paddle_two->yPos((game_height / 2) - (paddle_one->height() / 2));
 
 	ball = renderer->createRawSprite();
-	ball->loadTexture(".\\Resources\\Textures\\Paddle.png");
-	ball->width(15);
-	ball->height(15);
+	ball->loadTexture(".\\Resources\\Textures\\Ball.png");
+	ball->width(30);
+	ball->height(30);
 
 	std::srand(time(NULL));
 	spawn();
@@ -216,6 +216,7 @@ void Pong::keyHandler(ASGE::SharedEventData data)
 		{
 			switch (key->key)
 			{
+
 				case ASGE::KEYS::KEY_W:
 				{
 					direction.set_dir_one(-1);
@@ -286,11 +287,11 @@ void Pong::update(const ASGE::GameTime & us)
 		auto y_pos = ball->yPos();
 
 		//check if ball is hitting paddles 
-		if (isInside(ball, paddle_one, x_pos, y_pos))
+		if (isInside(paddle_one, x_pos, y_pos))
 		{
 			ball_direction.set_x(ball_direction.get_x() * -1);
 		}
-		else if (isInside(ball, paddle_two, x_pos, y_pos))
+		else if (isInside(paddle_two, x_pos, y_pos))
 		{
 			ball_direction.set_x(ball_direction.get_x() * -1);
 		}
@@ -306,6 +307,17 @@ void Pong::update(const ASGE::GameTime & us)
 		if (y_pos >= game_height - ball->height() || y_pos <= 0)
 		{
 			ball_direction.set_y(ball_direction.get_y() * -1);
+		}
+
+		if ((paddle_one->yPos() <= 0) ||
+			(paddle_one->yPos() + paddle_one->height()) >= game_height)
+		{
+			direction.set_dir_one(direction.get_dir_one() * -1);
+		}
+		if ((paddle_two->yPos() <= 0) ||
+			(paddle_two->yPos() + paddle_two->height()) >= game_height)
+		{
+			direction.set_dir_two(direction.get_dir_two() * -1);
 		}
 
 		//check for point scoring
@@ -349,8 +361,10 @@ void Pong::render(const ASGE::GameTime &)
 			200, 200, 1.0, ASGE::COLOURS::AQUAMARINE);
 		renderer->renderText(menu_option == 1 ? ">HOW TO PLAY" : "HOW TO PLAY",
 			200, 250, 1.0, ASGE::COLOURS::AQUAMARINE);
-		renderer->renderText(menu_option == 2 ? ">QUIT" : "QUIT?",
+		renderer->renderText(menu_option == 2 ? ">OPTIONS" : "OPTIONS",
 			200, 300, 1.0, ASGE::COLOURS::AQUAMARINE);
+		renderer->renderText(menu_option == 3 ? ">QUIT" : "QUIT?",
+			200, 350, 1.0, ASGE::COLOURS::AQUAMARINE);
 	}
 	else if (in_how_to_play)
 	{
@@ -398,6 +412,7 @@ void Pong::render(const ASGE::GameTime &)
 	}
 	else
 	{
+	//	renderer->renderSprite(*background);
 		renderer->renderSprite(*paddle_one);
 		renderer->renderSprite(*paddle_two);
 		renderer->renderSprite(*ball);
@@ -434,9 +449,9 @@ void Pong::spawn()
 		{
 			x += 5;
 		}
-		if (y == 0)
+		if (y >= 7)
 		{
-			y += 5;
+			y -= 3;
 		}
 
 		ball_direction.set_x(x);
@@ -448,14 +463,14 @@ void Pong::spawn()
 	
 }
 
-bool Pong::isInside(const ASGE::Sprite* ball_sprite, const ASGE::Sprite* paddle_sprite, float x, float y) const
+bool Pong::isInside(const ASGE::Sprite* paddle_sprite, float x, float y) const
 {
 	float paddle_height = paddle_sprite->height();
 	float paddle_width = paddle_sprite->width();
 	float pos_x = paddle_sprite->xPos();
 	float pos_y = paddle_sprite->yPos();
 
-	if (((x >= pos_x) && (x <= pos_x + paddle_width)) &&
+	if ((((x+ball->width()) >= pos_x) && (x <= pos_x + paddle_width)) &&
 		((y >= pos_y) && (y <= pos_y + paddle_height)))
 	{
 		return true;

@@ -92,19 +92,16 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\GameFont.cpp" />
     <ClCompile Include="..\..\Source\main.cpp" />
-    <ClCompile Include="..\..\Source\Movement.cpp" />
+    <ClCompile Include="..\..\Source\Paddle.cpp" />
     <ClCompile Include="..\..\Source\Vector.cpp" />
     <ClInclude Include="..\..\Source\Constants.h" />
     <ClInclude Include="..\..\Source\Game.h" />
     <ClInclude Include="..\..\Source\GameFont.h" />
-    <ClInclude Include="..\..\Source\Movement.h" />
+    <ClInclude Include="..\..\Source\Paddle.h" />
     <ClInclude Include="..\..\Source\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Game.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="\\nstu-nas01.uwe.ac.uk\users1$\b7-king\Personal\ESD\Paddle.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
